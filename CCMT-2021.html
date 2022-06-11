@@ -84,14 +84,14 @@
 		Show:
 		<select id="table_view">
 			<option value="0">All Institutes</option>
-			<option value="2">Accepting Institutes</option>
-			<option value="1">Accepting Institutes (include zero seats)</option>
+			<option value="2">Accepting Courses</option>
+			<option value="1">Accepting Courses (include zero seats)</option>
 		</select> <br><br>
 
 		Sort by:
 		<select id="sort_by">
 			<option value="0">Institute Name</option>
-			<option value="2">Program Name</option>
+			<option value="2">Program (Course) Name</option>
 			<option value="4">MAX cutoff</option>
 			<option value="6">MIN cutoff</option>
 			<option value="8">Average cutoff</option>
@@ -101,10 +101,10 @@
 
 		<button id="go" onclick="parseTable()">UPDATE</button> <br><br>
 
-		Accepting Institutes: <span id="goodCount"></span> <br>
-		Rejecting Institutes: <span id="badCount"></span> <br>
+		Accepting Courses: <span id="goodCount"></span> <br>
+		Rejecting Courses: <span id="badCount"></span> <br>
 		Zero Seats: <span id="zeroCount"></span> <br>
-		Total Institutes: <span id="totalCount"></span> <br>
+		Total Courses: <span id="totalCount"></span> <br>
 
 		<table id="hidden_table" style="display: none; margin: -9999px;">
 			<tr class="grey">
