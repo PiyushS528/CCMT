@@ -36,6 +36,7 @@
 			.bad td, .bad th{
 				background: #ffcfcf
 			}
+
 			#totalCount {
 				font-weight: bold;
 			}
@@ -97,14 +98,14 @@
 			<option value="8">Average cutoff</option>
 		</select> <br>
 		<label><input type="radio" name="sortOrder" id="order_asc" checked> Ascending</label> &nbsp;
-		<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label> &nbsp;<br>
+		<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label> <br><br>
 
 		<button id="go" onclick="parseTable()">UPDATE</button> <br><br>
 
 		Accepting Courses: <span id="goodCount"></span> <br>
 		Rejecting Courses: <span id="badCount"></span> <br>
 		Zero Seats: <span id="zeroCount"></span> <br>
-		Total Courses: <span id="totalCount"></span> <br>
+		Total Courses: <span id="totalCount"></span> <br><br>
 
 		<table id="hidden_table" style="display: none; margin: -9999px;">
 			<tr class="grey">
@@ -150,19 +151,7 @@
 
 		<script type="text/javascript">
 			var tableHeader = document.getElementById("hidden_table").children;
-			function isCode(num) {
-				num = parseInt(num);
-				if (num >= 100000 && num <= 999999) return true;
-				else return false;
-			}
-			function isGroupId(str) {
-				if (str.length === 2 && str[0] === 'G' && parseInt(str[1])) return true;
-				else return false;
-			}
-			function isProgId(str) {
-				if (str.length === 2 && str[0] >= 'A' && str[0] <= 'Z' && ((str[1] >= 'A' && str[1] <= 'Z') || (str[1] >= '0' && str[1] <= '9'))) return true;
-				else return false;
-			}
+
 			function addCell (tr, str, classList) {
 				var td = document.createElement("td");
 				var text = document.createTextNode (str);
@@ -182,7 +171,7 @@
 					}
 				}
 			}
-			function mySort(data, sortBy, scoreindex) {
+			function sortData(data, sortBy, scoreindex) {
 				switch (sortBy) {
 					case 0: insSort(data, function (a, b) {return (a[0] <= b[0]) ? -1 : 1});
 						break;
@@ -229,7 +218,7 @@
 
 				var goodCount = 0, zeroCount = 0, totalCount = 0;
 
-				data = mySort(data, sortBy, category+3);
+				data = sortData(data, sortBy, category+3);
 
 				for (var i = 0; i < data.length; ++i) {
 					var s = data[i];
@@ -281,7 +270,15 @@
 				document.getElementById("badCount").innerHTML = i - goodCount - zeroCount;
 				document.getElementById("zeroCount").innerHTML = zeroCount;
 			}
-			document.body.onLoad = parseTable();
+			document.body.onload = function() {
+				sortData(scores.round1, 2);
+				sortData(scores.round2, 2);
+				sortData(scores.round2, 0);
+				sortData(scores.round3, 2);
+				sortData(scores.round3, 0);
+
+				parseTable();
+			}
 		</script>
 	</body>
 </html>
