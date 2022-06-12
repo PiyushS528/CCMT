@@ -170,27 +170,39 @@
 				td.appendChild(text);
 				tr.appendChild(td);
 			}
+			function insSort(d, cmp) {
+				for (var i = 1; i < d.length; ++i) {
+					for (var j = i; j > 0; --j) {
+						if (cmp(d[j-1], d[j]) > 0) {
+							var temp = d[j];
+							d[j] = d[j-1];
+							d[j-1] = temp;
+						}
+						else break;
+					}
+				}
+			}
 			function mySort(data, sortBy, scoreindex) {
 				switch (sortBy) {
-					case 0: data.sort(function (a, b) {return (a[0] <= b[0]) ? -1 : 1});
+					case 0: insSort(data, function (a, b) {return (a[0] <= b[0]) ? -1 : 1});
 						break;
-					case 1: data.sort(function (a, b) {return (a[0] <= b[0]) ? 1 : -1});
+					case 1: insSort(data, function (a, b) {return (a[0] <= b[0]) ? 1 : -1});
 						break;
-					case 2: data.sort(function (a, b) {return (a[1] <= b[1]) ? -1 : 1});
+					case 2: insSort(data, function (a, b) {return (a[1] <= b[1]) ? -1 : 1});
 						break;
-					case 3: data.sort(function (a, b) {return (a[1] <= b[1]) ? 1 : -1});
+					case 3: insSort(data, function (a, b) {return (a[1] <= b[1]) ? 1 : -1});
 						break;
-					case 4: data.sort(function (a, b) {return a[scoreindex] - b[scoreindex]});
+					case 4: insSort(data, function (a, b) {return a[scoreindex] - b[scoreindex]});
 						break;
-					case 5: data.sort(function (a, b) {return b[scoreindex] - a[scoreindex]});
+					case 5: insSort(data, function (a, b) {return b[scoreindex] - a[scoreindex]});
 						break;
-					case 6: data.sort(function (a, b) {return a[scoreindex+1] - b[scoreindex+1]});
+					case 6: insSort(data, function (a, b) {return a[scoreindex+1] - b[scoreindex+1]});
 						break;
-					case 7: data.sort(function (a, b) {return b[scoreindex+1] - a[scoreindex+1]});
+					case 7: insSort(data, function (a, b) {return b[scoreindex+1] - a[scoreindex+1]});
 						break;
-					case 8: data.sort(function (a, b) {return (a[scoreindex]+a[scoreindex+1])/2 - (b[scoreindex+1]+b[scoreindex])/2});
+					case 8: insSort(data, function (a, b) {return (a[scoreindex]+a[scoreindex+1])/2 - (b[scoreindex+1]+b[scoreindex])/2});
 						break;
-					case 9: data.sort(function (a, b) {return (b[scoreindex]+b[scoreindex+1])/2 - (a[scoreindex+1]+a[scoreindex])/2});
+					case 9: insSort(data, function (a, b) {return (b[scoreindex]+b[scoreindex+1])/2 - (a[scoreindex+1]+a[scoreindex])/2});
 						break;
 				}
 				return data;
