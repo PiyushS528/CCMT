@@ -186,11 +186,11 @@
 				switch (sortBy) {
 					case 0: insSort(data, function (a, b) {return (a[0] <= b[0]) ? -1 : 1});
 						break;
-					case 1: insSort(data, function (a, b) {return (a[0] <= b[0]) ? 1 : -1});
+					case 1: insSort(data, function (a, b) {return (b[0] <= a[0]) ? -1 : 1});
 						break;
 					case 2: insSort(data, function (a, b) {return (a[1] <= b[1]) ? -1 : 1});
 						break;
-					case 3: insSort(data, function (a, b) {return (a[1] <= b[1]) ? 1 : -1});
+					case 3: insSort(data, function (a, b) {return (b[1] <= a[1]) ? -1 : 1});
 						break;
 					case 4: insSort(data, function (a, b) {return a[scoreindex] - b[scoreindex]});
 						break;
