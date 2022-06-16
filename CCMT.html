@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 	<head>
 		<title>CCMT Cutoff Viewer Tool</title>
 
@@ -200,7 +200,7 @@
 		<script type="text/javascript">
 			var tableHeader = document.getElementById("hidden_table").children;
 
-			function yearChanged() {
+			function yearChanged() {		// Update 'round' selection box if 'year' selection is changed 
 				var ccmt_year = document.getElementById ("ccmt_year").value;
 				var ccmt_rounds = document.getElementById ("ccmt_round");
 
@@ -213,14 +213,14 @@
 					ccmt_rounds.appendChild(option);
 				}
 			}
-			function addCell (tr, str, classList) {
+			function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
 				var td = document.createElement("td");
 				var text = document.createTextNode (str);
 				if (classList) td.classList += " " + classList;
 				td.appendChild(text);
 				tr.appendChild(td);
 			}
-			function insSort(d, cmp) {
+			function insSort(d, cmp) {		// insertion sort with cmp() as comparing function
 				for (var i = 1; i < d.length; ++i) {
 					for (var j = i; j > 0; --j) {
 						if (cmp(d[j-1], d[j]) > 0) {
@@ -232,27 +232,27 @@
 					}
 				}
 			}
-			function sortData(data, sortBy, scoreindex) {
+			function sortData(data, sortBy, scoreindex) {		// scoreindex = starting index of score within data row (general category)
 				switch (sortBy) {
-					case 0: insSort(data, function (a, b) {return (a[0] <= b[0]) ? -1 : 1});
+					case 0: insSort(data, function (a, b) {return (a[0] <= b[0]) ? -1 : 1});	// Ascending institute name
 						break;
-					case 1: insSort(data, function (a, b) {return (b[0] <= a[0]) ? -1 : 1});
+					case 1: insSort(data, function (a, b) {return (b[0] <= a[0]) ? -1 : 1});	// Descending institute name
 						break;
-					case 2: insSort(data, function (a, b) {return (a[1] <= b[1]) ? -1 : 1});
+					case 2: insSort(data, function (a, b) {return (a[1] <= b[1]) ? -1 : 1});	// Ascending program name
 						break;
-					case 3: insSort(data, function (a, b) {return (b[1] <= a[1]) ? -1 : 1});
+					case 3: insSort(data, function (a, b) {return (b[1] <= a[1]) ? -1 : 1});	// Descending program name
 						break;
-					case 4: insSort(data, function (a, b) {return a[scoreindex] - b[scoreindex]});
+					case 4: insSort(data, function (a, b) {return a[scoreindex] - b[scoreindex]});	// Ascending MAX score
 						break;
-					case 5: insSort(data, function (a, b) {return b[scoreindex] - a[scoreindex]});
+					case 5: insSort(data, function (a, b) {return b[scoreindex] - a[scoreindex]});	// Descending MAX score
 						break;
-					case 6: insSort(data, function (a, b) {return a[scoreindex+1] - b[scoreindex+1]});
+					case 6: insSort(data, function (a, b) {return a[scoreindex+1] - b[scoreindex+1]});	// Ascending MIN score
 						break;
-					case 7: insSort(data, function (a, b) {return b[scoreindex+1] - a[scoreindex+1]});
+					case 7: insSort(data, function (a, b) {return b[scoreindex+1] - a[scoreindex+1]});	// Descending MIN score
 						break;
-					case 8: insSort(data, function (a, b) {return (a[scoreindex]+a[scoreindex+1])/2 - (b[scoreindex+1]+b[scoreindex])/2});
+					case 8: insSort(data, function (a, b) {return (a[scoreindex]+a[scoreindex+1])/2 - (b[scoreindex+1]+b[scoreindex])/2});	// Ascending (MAX+MIN)/2 (average)
 						break;
-					case 9: insSort(data, function (a, b) {return (b[scoreindex]+b[scoreindex+1])/2 - (a[scoreindex+1]+a[scoreindex])/2});
+					case 9: insSort(data, function (a, b) {return (b[scoreindex]+b[scoreindex+1])/2 - (a[scoreindex+1]+a[scoreindex])/2});	// Descending (MAX+MIN)/2 (average)
 						break;
 				}
 				return data;
@@ -329,7 +329,7 @@
 				document.getElementById("badCount").innerHTML = i - goodCount - zeroCount;
 				document.getElementById("zeroCount").innerHTML = zeroCount;
 			}
-			document.body.onload = function() {
+			document.body.onload = function() {		// Group by institute name, sort by program name for every list
 				for (var year in scores) {
 					for (var round in scores[year]) {
 						sortData(scores[year][round], 2);
