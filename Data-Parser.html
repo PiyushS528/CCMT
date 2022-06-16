@@ -1,17 +1,26 @@
 <textarea id="data" style="width: 100%; height: 10em;"></textarea>
 <button onclick="parsedata()">Parse</button>
+<textarea id="outputbox" style="width: 100%; height: 10em;"></textarea>
 
 <script type="text/javascript">
 function parsedata() {
 	var data = document.getElementById("data").value.split('\n');
+	var outputbox = document.getElementById("outputbox");
 	var output = [];
+
+	outputbox.value = '[';	
 	for (var i = 0; i < data.length; ++i) {
 		var d = data[i].split('\t');
+		outputbox.value += '\n\t[\"' + d[0] + '\",\"' + d[1] + '\",\"' + d[2] + '\"';
 		for (var j = 3; j < d.length; ++j) {
 			d[j] = parseInt(d[j]);
+			outputbox.value += ',' + d[j];
 		}
 		output.push(d);
+		outputbox.value += ']';
+		if (i < data.length - 1) outputbox.value += ',';
 	}
+	outputbox.value += '\n]';
 	console.log(output);
 }
 </script>
