@@ -5,6 +5,34 @@
 		
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<style type="text/css">
+			select {
+				height: 2em;
+			}
+			input[type="number"] {
+				height: 2em;
+			}
+			label {
+				border: 1px solid rgba(0, 0, 0, 0.5);
+				border-radius: 5em;
+				border-width: 0 0 1px 1px;
+				cursor: pointer;
+				line-height: 2em;
+				padding: 0 1em;
+			}
+			button {
+				background: #efefef;
+				border: 1px solid #000000;
+				border-radius: 5px;
+				cursor: pointer;
+				padding: 0.5em 2em;
+			}
+			button:hover {
+				background: #cfeff7;
+			}
+			button:active {
+				background: #2fcfff;
+			}
+			
 			#cutoff_table {
 				border: 1px solid black;
 			}
@@ -25,16 +53,16 @@
 				background: #ffcfcf !important;
 			}
 			.default td, .default th{
-				background: #ffffff
+				background: #ffffff;
 			}
 			.grey td, .grey th {
-				background: #dfdfdf
+				background: #dfdfdf;
 			}
 			.good td, .good th{
-				background: #cfffcf
+				background: #cfffcf;
 			}
 			.bad td, .bad th{
-				background: #ffcfcf
+				background: #ffcfcf;
 			}
 
 			#totalCount {
@@ -59,12 +87,18 @@
 	<body>
 		<h1> CCMT-2021 GATE Score cutoffs </h1>
 
-		Round:
-		<select id="round">
-			<option value="1">Round 1</option>
-			<option value="2">Round 2</option>
-			<option value="3">Round 3</option>
+		Year:
+		<select id="ccmt_year" onchange="yearChanged()">
+			<option value="year2021" selected>2021</option>
+			<option value="year2020">2020</option>
 		</select> <br>
+
+		Round:
+		<select id="ccmt_round">
+			<option value="Round 1" selected>Round 1</option>
+			<option value="Round 2">Round 2</option>
+			<option value="Round 3">Round 3</option>
+		</select> <br><br>
 
 		GATE Score: <input type="number" id="gate_score" value="0"> <br>
 
@@ -153,6 +187,19 @@
 		<script type="text/javascript">
 			var tableHeader = document.getElementById("hidden_table").children;
 
+			function yearChanged() {
+				var ccmt_year = document.getElementById ("ccmt_year").value;
+				var ccmt_rounds = document.getElementById ("ccmt_round");
+
+				ccmt_rounds.innerHTML = "";
+				for (var r in scores[ccmt_year]) {
+					var option = document.createElement("option");
+					option.setAttribute("value", r);
+					var text = document.createTextNode(r);
+					option.appendChild(text);
+					ccmt_rounds.appendChild(option);
+				}
+			}
 			function addCell (tr, str, classList) {
 				var td = document.createElement("td");
 				var text = document.createTextNode (str);
@@ -198,7 +245,8 @@
 				return data;
 			}
 			function parseTable() {
-				var round = document.getElementById ("round").value;
+				var ccmt_year = document.getElementById ("ccmt_year").value;
+				var ccmt_round = document.getElementById ("ccmt_round").value;
 				var data;
 				var gate_score = parseInt(document.getElementById ("gate_score").value);
 				if (!gate_score) gate_score = 0;
@@ -210,12 +258,7 @@
 				var table = document.getElementById ("cutoff_table");
 				table.innerHTML = document.getElementById("hidden_table").innerHTML;
 
-				if (round === '1')
-					data = scores.round1;
-				else if (round === '2')
-					data = scores.round2;
-				else if (round === '3')
-					data = scores.round3;
+				var data = scores[ccmt_year][ccmt_round];
 
 				var goodCount = 0, zeroCount = 0, totalCount = 0;
 
@@ -274,11 +317,12 @@
 				document.getElementById("zeroCount").innerHTML = zeroCount;
 			}
 			document.body.onload = function() {
-				sortData(scores.round1, 2);
-				sortData(scores.round2, 2);
-				sortData(scores.round2, 0);
-				sortData(scores.round3, 2);
-				sortData(scores.round3, 0);
+				for (var year in scores) {
+					for (var round in scores[year]) {
+						sortData(scores[year][round], 2);
+						sortData(scores[year][round], 0);
+					}
+				}
 
 				parseTable();
 			}
