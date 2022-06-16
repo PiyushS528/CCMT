@@ -13,8 +13,14 @@
 		<link rel="icon" type="image/x-icon" href="./favicon.ico">
 
 		<style type="text/css">
+			html, body, input, button, select {
+				font-family: sans-serif;
+			}
 			html, body {
 				background: #cfdfef;
+			}
+			fieldset {
+				border: 1px dashed #000000;
 			}
 			select {
 				height: 2em;
@@ -99,54 +105,61 @@
 	<body>
 		<h1> CCMT Cutoff Viewer Tool </h1>
 
-		Year:
-		<select id="ccmt_year" onchange="yearChanged()">
-			<option value="year2021" selected>2021</option>
-			<option value="year2020">2020</option>
-		</select> <br>
+		<em style="font-size: 0.8em">
+			Last Updated: Jun-2022 <br>
+			(Source: <a href="https://ccmt.admissions.nic.in/or-cr/">https://ccmt.admissions.nic.in/or-cr/</a>)
+		</em> <br><br>
 
-		Round:
-		<select id="ccmt_round">
-			<option value="Round 1" selected>Round 1</option>
-			<option value="Round 2">Round 2</option>
-			<option value="Round 3">Round 3</option>
-		</select> <br><br>
+		<fieldset id="fields">
+			Year:
+			<select id="ccmt_year" onchange="yearChanged()">
+				<option value="year2021" selected>2021</option>
+				<option value="year2020">2020</option>
+			</select> <br>
 
-		GATE Score: <input type="number" id="gate_score" value="0"> <br>
+			Round:
+			<select id="ccmt_round">
+				<option value="Round 1" selected>Round 1</option>
+				<option value="Round 2">Round 2</option>
+				<option value="Round 3">Round 3</option>
+			</select> <br><br>
 
-		Category:
-		<select id="category">
-			<option value="0">GEN (Open)</option>
-			<option value="1">GEN-PwD (Open-PwD)</option>
-			<option value="2">EWS</option>
-			<option value="3">EWS-PwD</option>
-			<option value="4">OBC-NCL</option>
-			<option value="5">OBC-NCL-PwD</option>
-			<option value="6">SC</option>
-			<option value="7">SC-PwD</option>
-			<option value="8">ST</option>
-			<option value="9">ST-PwD</option>
-		</select> <br>
+			GATE Score: <input type="number" id="gate_score" value="0"> <br>
 
-		Show:
-		<select id="table_view">
-			<option value="0">All Courses</option>
-			<option value="2">Accepting Courses</option>
-			<option value="1">Accepting Courses (include zero seats)</option>
-		</select> <br><br>
+			Category:
+			<select id="category">
+				<option value="0">GEN (Open)</option>
+				<option value="1">GEN-PwD (Open-PwD)</option>
+				<option value="2">EWS</option>
+				<option value="3">EWS-PwD</option>
+				<option value="4">OBC-NCL</option>
+				<option value="5">OBC-NCL-PwD</option>
+				<option value="6">SC</option>
+				<option value="7">SC-PwD</option>
+				<option value="8">ST</option>
+				<option value="9">ST-PwD</option>
+			</select> <br>
 
-		Sort by:
-		<select id="sort_by">
-			<option value="0">Institute Name</option>
-			<option value="2">Program (Course) Name</option>
-			<option value="4">MAX cutoff</option>
-			<option value="6">MIN cutoff</option>
-			<option value="8">Average cutoff</option>
-		</select> <br>
-		<label><input type="radio" name="sortOrder" id="order_asc" checked> Ascending</label> &nbsp;
-		<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label> <br><br>
+			Show:
+			<select id="table_view">
+				<option value="0">All Courses</option>
+				<option value="2">Accepting Courses</option>
+				<option value="1">Accepting Courses (include zero seats)</option>
+			</select> <br><br>
 
-		<button id="go" onclick="parseTable()">UPDATE</button> <br><br>
+			Sort by:
+			<select id="sort_by">
+				<option value="0">Institute Name</option>
+				<option value="2">Program (Course) Name</option>
+				<option value="4">MAX cutoff</option>
+				<option value="6">MIN cutoff</option>
+				<option value="8">Average cutoff</option>
+			</select> <br>
+			<label><input type="radio" name="sortOrder" id="order_asc" checked> Ascending</label> &nbsp;
+			<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label> <br><br>
+
+			<button id="go" onclick="parseTable()">UPDATE</button>
+		</fieldset> <br>
 
 		Accepting Courses: <span id="goodCount"></span> <br>
 		Rejecting Courses: <span id="badCount"></span> <br>
