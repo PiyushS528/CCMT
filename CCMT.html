@@ -231,7 +231,7 @@
 			function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
 				var td = document.createElement("td");
 				var text = document.createTextNode (str);
-				if (classList) td.classList += " " + classList;
+				if (classList) td.classList.add(classList);
 				td.appendChild(text);
 				tr.appendChild(td);
 			}
@@ -306,7 +306,7 @@
 							if (scoreCellNumber === category || scoreCellNumber === category+1) {
 								if (s[j] === 0) {
 									addCell(row, s[j], "grey");
-									row.classList += " grey";
+									row.classList.add("grey");
 									if (scoreCellNumber === category) ++zeroCount;
 									if (tableView >= 2) {
 										row = null;
@@ -315,13 +315,13 @@
 								}
 								else if (gate_score >= s[j]) {
 									addCell(row, s[j], "good");
-									row.classList += " good";
+									row.classList.add("good");
 									if (scoreCellNumber === category+1) ++goodCount;
 								}
 								else if (gate_score < s[j]) {
 									addCell(row, s[j], "bad");
 									if (scoreCellNumber === category+1) {
-										row.classList += " bad";
+										row.classList.add("bad");
 										if (tableView >= 1) {
 											row = null;
 											break;
@@ -351,7 +351,6 @@
 						sortData(scores[year][round], 0);
 					}
 				}
-
 				parseTable();
 			}
 		</script>
