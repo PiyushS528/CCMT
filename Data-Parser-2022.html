@@ -1,0 +1,69 @@
+<textarea id="data" style="width: 100%; height: 10em;"></textarea>
+<button onclick="parsedata()">Parse</button>
+<textarea id="outputbox" style="width: 100%; height: 10em;"></textarea>
+
+<script type="text/javascript">
+function findProgIndex (arr, insName, progName, groupName) {
+	for (var i = 0; i < arr.length; ++i) {
+		if (arr[i][0] === insName && arr[i][1] === progName && arr[i][2] === groupName) {
+			return i;
+		}
+	}
+	return -1;
+}
+function categoryIndex (c) {
+	if (c === "OPEN") return 0;
+	else if (c === "OPEN-PwD") return 2;
+	else if (c === "EWS") return 4;
+	else if (c === "EWS-PwD") return 6;
+	else if (c === "OBC-NCL") return 8;
+	else if (c === "OBC-NCL-PwD") return 10;
+	else if (c === "SC") return 12;
+	else if (c === "SC-PwD") return 14;
+	else if (c === "ST") return 16;
+	else if (c === "ST-PwD") return 18;
+}
+function newProg (d) {
+	var prog = ["", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+	var ind = categoryIndex(d[5]);
+
+	prog[0] = d[2];
+	prog[1] = d[3];
+	prog[2] = d[4];
+	
+	prog[ind+3] = parseInt(d[6]);
+	prog[ind+4] = parseInt(d[7]);
+	return prog;
+}
+	
+function parsedata() {
+	var data = document.getElementById("data").value.split('\n');
+	var outputbox = document.getElementById("outputbox");
+	var parsedArray = [];
+
+	for (var i = 0; i < data.length; ++i) {
+		var d = data[i].split('\t');
+		var ind = findProgIndex (parsedArray, d[2], d[3], d[4]);
+		if (ind === -1)
+			parsedArray.push (newProg(d));
+		else {
+			var categ_ind = categoryIndex(d[5]);
+			parsedArray[ind][categ_ind+3] = parseInt(d[6]);
+			parsedArray[ind][categ_ind+4] = parseInt(d[7]);
+		}
+	}
+
+	outputbox.value = '[';
+	for (var i = 0; i < parsedArray.length; ++i) {
+		var d = parsedArray[i];
+		outputbox.value += '\n\t[\"' + d[0] + '\",\"' + d[1] + '\",\"' + d[2] + '\"';
+		for (var j = 3; j < d.length; ++j) {
+			outputbox.value += ',' + d[j];
+		}
+		outputbox.value += ']';
+		if (i < parsedArray.length - 1) outputbox.value += ',';
+	}
+	outputbox.value += '\n]';
+	console.log (parsedArray);
+}
+</script>
