@@ -14,26 +14,34 @@
 		<link rel="icon" type="image/x-icon" href="./favicon.ico">
 
 		<style type="text/css">
+			@font-face {
+				font-family: autoradiographic;
+				src: url("./autoradiographic/autoradiographic rg.ttf");
+			}
+			@font-face {
+				font-family: autoradiographic;
+				font-style: italic;
+				src: url("./autoradiographic/autoradiographic rg it.ttf");
+			}
 			html, body, input, button, select {
-				font-family: sans-serif;
+				font-family: autoradiographic, sans-serif;
 			}
 			html, body {
 				background: #cfdfef;
 			}
 			fieldset {
 				border: 1px dashed #000000;
+				min-width: 32em;
 			}
-			select {
+			select, input[type="number"] {
 				height: 2em;
-			}
-			input[type="number"] {
-				height: 2em;
+				margin: 0.2em 0 0 0;
 			}
 			.curr {
 				border: 3px double #6f6f6f;
 				border-width: 3px 0;
 				color: #6f6f6f;
-				font-size: 0.6em;
+				font-size: 0.7em;
 				margin-left: 0.5em;
 				padding: 0 0.5em;
 			}
@@ -61,6 +69,7 @@
 			
 			#cutoff_table {
 				border: 1px solid black;
+				font-size: 0.8em;
 			}
 			#cutoff_table td, #cutoff_table th {
 				border: 1px solid black;
