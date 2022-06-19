@@ -170,52 +170,10 @@
 		Total Courses: <span id="totalCount"></span> <br><br>
 
 		(Note: MAX and MIN values indicate GATE scores) <br><br>
-		<table id="hidden_table" style="display: none; margin: -9999px;">
-			<tr class="grey">
-				<th rowspan="2">Sr. No.</th>
-				<th rowspan="2">Institute Name</th>
-				<th rowspan="2">Program Name</th>
-				<th rowspan="2">Group Id</th>
-				<th colspan="2">GEN</th>
-				<th colspan="2">GEN-PwD</th>
-				<th colspan="2">EWS</th>
-				<th colspan="2">EWS-PwD</th>
-				<th colspan="2">OBC-NCL</th>
-				<th colspan="2">OBC-NCL-PwD</th>
-				<th colspan="2">SC</th>
-				<th colspan="2">SC-PwD</th>
-				<th colspan="2">ST</th>
-				<th colspan="2">ST-PwD</th>
-			</tr>
-			<tr class="grey">
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-				<th>MAX</th>
-				<th>MIN</th>
-			</tr>
-		</table>
 
 		<table id="cutoff_table" cellspacing="0"></table>
 
 		<script type="text/javascript">
-			var tableHeader = document.getElementById("hidden_table").children;
-
 			function yearChanged() {		// Update 'round' selection box if 'year' selection is changed 
 				var ccmt_year = document.getElementById ("ccmt_year").value;
 				var ccmt_rounds = document.getElementById ("ccmt_round");
@@ -232,9 +190,49 @@
 			function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
 				var td = document.createElement("td");
 				var text = document.createTextNode (str);
-				if (classList) td.classList.add(classList);
+				if (classList) td.className += " "+classList;
 				td.appendChild(text);
 				tr.appendChild(td);
+				return td;
+			}
+			function addHeader (tr, str, classList) {		// append <th class=(classList)>(str)</th> in tr table row
+				var th = document.createElement("th");
+				var text = document.createTextNode (str);
+				if (classList) th.className += " "+classList;
+				th.appendChild(text);
+				tr.appendChild(th);
+				return th;
+			}
+			function addTableHeader (table) {
+				var tr, th;
+
+				var tr = document.createElement ("tr");
+				tr.className += " grey";
+
+				th = addHeader(tr, "Sr. No."); th.setAttribute("rowspan", 2);
+				th = addHeader(tr, "Institute Name"); th.setAttribute("rowspan", 2);
+				th = addHeader(tr, "Program Name"); th.setAttribute("rowspan", 2);
+				th = addHeader(tr, "Group Id"); th.setAttribute("rowspan", 2);
+				th = addHeader(tr, "GEN"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "GEN-PwD"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "EWS"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "EWS-PwD"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "OBC-NCL"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "OBC-NCL-PwD"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "SC"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "SC-PwD"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "ST"); th.setAttribute("colspan", 2);
+				th = addHeader(tr, "ST-PwD"); th.setAttribute("colspan", 2);
+				table.appendChild(tr);
+
+				var tr = document.createElement ("tr");
+				tr.className += " grey";
+
+				for (var i = 0; i < 10; ++i) {
+					addHeader(tr, "MAX");
+					addHeader(tr, "MIN");
+				}
+				table.appendChild(tr);
 			}
 			function insSort(d, cmp) {		// insertion sort with cmp() as comparing function
 				for (var i = 1; i < d.length; ++i) {
@@ -285,7 +283,9 @@
 				sortBy = (document.getElementById ("order_asc").checked) ? sortBy : (sortBy+1);
 
 				var table = document.getElementById ("cutoff_table");
-				table.innerHTML = document.getElementById("hidden_table").innerHTML;
+				while (table.firstChild)
+					table.removeChild (table.lastChild);	// clears the table
+				addTableHeader(table);
 
 				var data = scores[ccmt_year][ccmt_round];
 
@@ -307,7 +307,7 @@
 							if (scoreCellNumber === category || scoreCellNumber === category+1) {
 								if (s[j] === 0) {
 									addCell(row, s[j], "grey");
-									row.classList.add("grey");
+									row.className += " grey";
 									if (scoreCellNumber === category) ++zeroCount;
 									if (tableView >= 2) {
 										row = null;
@@ -316,13 +316,13 @@
 								}
 								else if (gate_score >= s[j]) {
 									addCell(row, s[j], "good");
-									row.classList.add("good");
+									row.className += " good";
 									if (scoreCellNumber === category+1) ++goodCount;
 								}
 								else if (gate_score < s[j]) {
 									addCell(row, s[j], "bad");
 									if (scoreCellNumber === category+1) {
-										row.classList.add("bad");
+										row.className += " bad";
 										if (tableView >= 1) {
 											row = null;
 											break;
