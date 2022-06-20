@@ -141,7 +141,7 @@
 			(Source: <a href="https://ccmt.admissions.nic.in/or-cr/" target="_blank">https://ccmt.admissions.nic.in/or-cr/</a> (new tab) )
 		</em> <br><br>
 
-		<fieldset id="fields">
+		<fieldset id="fields" onchange="console.log('changed')">
 			Year:
 			<select id="ccmt_year" onchange="yearChanged()">
 				<option value="year2022" selected>2022</option>
@@ -152,17 +152,17 @@
 			<span id="curr_year" class="curr"></span> <br>
 
 			Round:
-			<select id="ccmt_round">
+			<select id="ccmt_round" onchange="highlightUpdateButton()">
 				<option value="Round 1" selected>Round 1</option>
 			</select>
 			<span id="curr_round" class="curr"></span> <br><br>
 
 			GATE Score:
-			<input type="number" id="gate_score" value="0">
+			<input type="number" id="gate_score" value="0" onchange="highlightUpdateButton()" />
 			<span id="curr_score" class="curr"></span> <br>
 
 			Category:
-			<select id="category">
+			<select id="category" onchange="highlightUpdateButton()">
 				<option value="0" selected>GEN (Open)</option>
 				<option value="1">GEN-PwD (Open-PwD)</option>
 				<option value="2">EWS</option>
@@ -177,7 +177,7 @@
 			<span id="curr_cat" class="curr"></span> <br>
 
 			Show:
-			<select id="table_view">
+			<select id="table_view" onchange="highlightUpdateButton()">
 				<option value="0" selected>All Courses</option>
 				<option value="2">Accepting Courses</option>
 				<option value="1">Accepting Courses (include zero seats)</option>
@@ -185,7 +185,7 @@
 			<span id="curr_view" class="curr"></span> <br><br>
 
 			Sort by:
-			<select id="sort_by">
+			<select id="sort_by" onchange="highlightUpdateButton()">
 				<option value="0" selected>Institute Name</option>
 				<option value="2">Program (Course) Name</option>
 				<option value="4">MAX cutoff</option>
@@ -194,8 +194,8 @@
 			</select>
 			<span id="curr_sort" class="curr"></span> <br>
 
-			<label><input type="radio" name="sortOrder" id="order_asc" checked> Ascending</label> &nbsp;
-			<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label>
+			<label><input type="radio" name="sortOrder" id="order_asc" checked onchange="highlightUpdateButton()"> Ascending</label> &nbsp;
+			<label><input type="radio" name="sortOrder" id="order_desc" onchange="highlightUpdateButton()"> Descending</label>
 			<span id="curr_order" class="curr"></span> <br><br>
 
 			<button id="go" onclick="parseTable()">UPDATE</button>
@@ -273,6 +273,12 @@
 				state.tabledata = [];
 				state.othertabledata = [];
 			}
+			function highlightUpdateButton (disable) {
+				if (disable)
+					document.getElementById("go").style.outline = "0";
+				else
+					document.getElementById("go").style.outline = "3px solid #df5f5f";
+			}
 			function yearChanged() {		// Update 'round' selection box if 'year' selection is changed
 				inputfield.round.innerHTML = "";
 				for (var r in scores[inputfield.year.value]) {
@@ -282,6 +288,7 @@
 					option.appendChild(text);
 					inputfield.round.appendChild(option);
 				}
+				highlightUpdateButton();
 			}
 			function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
 				var td = document.createElement("td");
@@ -446,6 +453,7 @@
 				displayTableRows(state.currpage * state.rowsperpage, state.rowsperpage);
 			}
 			function parseTable() {
+				highlightUpdateButton(true);
 				updateInputState();
 				var categoryOffset = 2 * state.category;
 
