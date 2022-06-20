@@ -207,12 +207,14 @@
 			<span id="curr_order" class="curr"></span> <br><br>
 
 			<button id="go" onclick="parseTable()">UPDATE</button>
-		</fieldset> <br>
+		</fieldset>
 
-		Accepting Courses: <span id="goodCount"></span> <br>
-		Rejecting Courses: <span id="badCount"></span> <br>
-		Zero Seats: <span id="zeroCount"></span> <br>
-		Total Courses: <span id="totalCount"></span> <br><br>
+		<div id="course_counter"> <br>
+			Accepting Courses: <span id="goodCount"></span> <br>
+			Rejecting Courses: <span id="badCount"></span> <br>
+			Zero Seats: <span id="zeroCount"></span> <br>
+			Total Courses: <span id="totalCount"></span>
+		</div> <br>
 
 		(Note: MAX and MIN values indicate GATE scores) <br><br>
 
@@ -280,6 +282,9 @@
 
 				state.tabledata = [];
 				state.othertabledata = [];
+			}
+			function scrollToTop() {
+				document.getElementById("course_counter").scrollIntoView();
 			}
 			function highlightUpdateButton (disable) {
 				if (disable)
@@ -538,9 +543,6 @@
 				document.getElementById("curr_view").innerHTML = inputfield.showcourses.children[inputfield.showcourses.selectedIndex].innerHTML;
 				document.getElementById("curr_sort").innerHTML = inputfield.sortby.children[inputfield.sortby.selectedIndex].innerHTML;
 				document.getElementById("curr_order").innerHTML = (inputfield.orderasc.checked ? "Ascending" : "Descending");
-			}
-			function scrollToTop() {
-				inputfield.rowsperpage.scrollIntoView();
 			}
 			function loadInitTable() {		// Group by institute name, sort by program name for every list
 				for (var year in scores) {
