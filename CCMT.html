@@ -474,13 +474,13 @@
 						else if (j > 2) {
 							if (scoreCellNumber === categoryOffset || scoreCellNumber === categoryOffset+1) {
 								if (s[j] === 0) {
-									if (state.showcourses >= 2) {
-										row = null;
-										break;
-									}
 									if (scoreCellNumber === categoryOffset) {
 										classesData.unshift(" grey");
 										++zeroCount;
+									}
+									if (state.showcourses >= 2) {
+										row = null;
+										break;
 									}
 									row.push(s[j]);
 									classesData.push(3);
