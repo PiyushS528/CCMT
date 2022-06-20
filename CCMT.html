@@ -57,8 +57,12 @@
 				background: #efefef;
 				border: 1px solid #000000;
 				border-radius: 5px;
+				color: #000000;
 				cursor: pointer;
-				padding: 0.5em 2em;
+				padding: 0.3em 0.6em;
+			}
+			button#go {
+				padding: 0.5em 2em !important;
 			}
 			button:hover {
 				background: #cfeff7;
@@ -66,10 +70,16 @@
 			button:active {
 				background: #2fcfff;
 			}
+			button[disabled], button[disabled]:hover, button[disabled]:active {
+				background: #cfcfcf;
+				color: #7f7f7f;
+				border-color: #7f7f7f;
+			}
 			
 			#cutoff_table {
 				border: 1px solid black;
 				font-size: 0.9em;
+				min-width: 95%;
 			}
 			#cutoff_table td, #cutoff_table th {
 				border: 1px solid black;
@@ -120,19 +130,19 @@
 		<script type="text/javascript" src="./data.js"></script>
 	</head>
 
-	<body>
+	<body onload="loadInitTable()">
 		<h1> CCMT Cutoff Viewer Tool </h1>
 
 		<em style="font-size: 0.8em">
-			Last Updated: 19-Jun-2022 <br>
+			Last Updated: 20-Jun-2022 <br>
 			(Source: <a href="https://ccmt.admissions.nic.in/or-cr/" target="_blank">https://ccmt.admissions.nic.in/or-cr/</a> (new tab) )
 		</em> <br><br>
 
 		<fieldset id="fields">
 			Year:
 			<select id="ccmt_year" onchange="yearChanged()">
-				<option value="year2022">2022</option>
-				<option value="year2021" selected>2021</option>
+				<option value="year2022" selected>2022</option>
+				<option value="year2021">2021</option>
 				<option value="year2020">2020</option>
 				<option value="year2019">2019</option>
 			</select>
@@ -141,8 +151,6 @@
 			Round:
 			<select id="ccmt_round">
 				<option value="Round 1" selected>Round 1</option>
-				<option value="Round 2">Round 2</option>
-				<option value="Round 3">Round 3</option>
 			</select>
 			<span id="curr_round" class="curr"></span> <br><br>
 
@@ -152,7 +160,7 @@
 
 			Category:
 			<select id="category">
-				<option value="0">GEN (Open)</option>
+				<option value="0" selected>GEN (Open)</option>
 				<option value="1">GEN-PwD (Open-PwD)</option>
 				<option value="2">EWS</option>
 				<option value="3">EWS-PwD</option>
@@ -167,7 +175,7 @@
 
 			Show:
 			<select id="table_view">
-				<option value="0">All Courses</option>
+				<option value="0" selected>All Courses</option>
 				<option value="2">Accepting Courses</option>
 				<option value="1">Accepting Courses (include zero seats)</option>
 			</select>
@@ -175,7 +183,7 @@
 
 			Sort by:
 			<select id="sort_by">
-				<option value="0">Institute Name</option>
+				<option value="0" selected>Institute Name</option>
 				<option value="2">Program (Course) Name</option>
 				<option value="4">MAX cutoff</option>
 				<option value="6">MIN cutoff</option>
@@ -197,20 +205,79 @@
 
 		(Note: MAX and MIN values indicate GATE scores) <br><br>
 
+		Rows per page:
+		<select id="rowsperpage" onchange="updatePage(0)">
+			<option value="0">ALL</option>
+			<option value="10">10</option>
+			<option value="25" selected>25</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+		</select> <br>
+
+		Showing rows: <span id="rowsrange">-</span> &nbsp;
+
+		<div id="page_buttons">
+			<button id="prev_page" onclick="updatePage(-2)" disabled>&lt;</button>
+			<span id="page_number_row">
+				<button name="page_number" disabled>1</button>
+			</span>
+			<button id="next_page" onclick="updatePage(-1)" disabled>&gt;</button>
+		</div> <br>
+
 		<table id="cutoff_table" cellspacing="0"></table>
 
-		<script type="text/javascript">
-			function yearChanged() {		// Update 'round' selection box if 'year' selection is changed 
-				var ccmt_year = document.getElementById ("ccmt_year");
-				var ccmt_rounds = document.getElementById ("ccmt_round");
+		<button onclick="scrollToTop()">^ Back to top ^</button>
 
-				ccmt_rounds.innerHTML = "";
-				for (var r in scores[ccmt_year.value]) {
+		<script type="text/javascript">
+			var inputfield = {
+				year: document.getElementById("ccmt_year"),
+				round: document.getElementById("ccmt_round"),
+				score: document.getElementById("gate_score"),
+				category: document.getElementById("category"),
+				showcourses: document.getElementById("table_view"),
+				sortby: document.getElementById("sort_by"),
+				orderasc: document.getElementById("order_asc"),
+				rowsperpage: document.getElementById("rowsperpage")
+			};
+			var state = {
+				year: 0,
+				round: "",
+				score: 0,
+				category: "",
+				showcourses: 0,
+				sortby: 0,
+
+				rowsperpage: 0,
+				currpage: 0,
+
+				tabledata: [],
+				othertabledata: []
+			};
+			function updateInputState() {
+				state.year = inputfield.year.value;
+				state.round = inputfield.round.value;
+				state.score = parseInt(inputfield.score.value);
+				if (!state.score) state.score = 0;
+
+				state.category = parseInt(inputfield.category.value);
+				state.showcourses = parseInt(inputfield.showcourses.value);
+				state.sortby = parseInt(inputfield.sortby.value);
+				if (!inputfield.orderasc.checked) ++state.sortby;
+
+				state.rowsperpage = parseInt(inputfield.rowsperpage.value);
+				state.currpage = 0;
+
+				state.tabledata = [];
+				state.othertabledata = [];
+			}
+			function yearChanged() {		// Update 'round' selection box if 'year' selection is changed
+				inputfield.round.innerHTML = "";
+				for (var r in scores[inputfield.year.value]) {
 					var option = document.createElement("option");
 					option.setAttribute("value", r);
 					var text = document.createTextNode(r);
 					option.appendChild(text);
-					ccmt_rounds.appendChild(option);
+					inputfield.round.appendChild(option);
 				}
 			}
 			function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
@@ -297,91 +364,169 @@
 				}
 				return data;
 			}
-			function parseTable() {
-				var ccmt_year = document.getElementById ("ccmt_year");
-				var ccmt_round = document.getElementById ("ccmt_round");
-				var gate_score = parseInt(document.getElementById ("gate_score").value);
-				var category = document.getElementById ("category");
-				var categoryOffset = 2 * parseInt(category.value);
-				var tableView = document.getElementById ("table_view");
-				var tableViewType = parseInt(tableView.value);
-				var sortBy = document.getElementById ("sort_by");
-				var sortType = parseInt(sortBy.value);
-				sortType = (document.getElementById ("order_asc").checked) ? sortType : (sortType+1);
+			function displayTableRows (startingrow, totalrows) {
+				console.log ("working");
 				var table = document.getElementById ("cutoff_table");
-
-				if (!gate_score) gate_score = 0;
 
 				while (table.firstChild)
 					table.removeChild (table.lastChild);	// clears the table
 				addTableHeader(table);
 
-				var data = scores[ccmt_year.value][ccmt_round.value];
-				data = sortData(data, sortType, categoryOffset+3);
+				var lastrow = startingrow + totalrows - 1;
+				if ((lastrow > state.tabledata.length - 1) || (totalrows === 0))
+					lastrow = state.tabledata.length - 1;
+
+				for (var i = startingrow; i <= lastrow; ++i) {
+					var row = document.createElement("tr");
+					row.className += state.othertabledata[i][0];
+					addCell(row, state.tabledata[i][0]);
+					addCell(row, state.tabledata[i][1]);
+					addCell(row, state.tabledata[i][2]);
+					addCell(row, state.tabledata[i][3], "default");
+					for (var j = 4; j < state.tabledata[i].length; ++j) {
+						var colorcode = state.othertabledata[i][j-3];
+						var cellclass;
+						switch (colorcode) {
+							case 0: cellclass = "default"; break;
+							case 1: cellclass = "good"; break;
+							case 2: cellclass = "bad"; break;
+							case 3: cellclass = "grey"; break;
+						}
+						addCell(row, state.tabledata[i][j], cellclass);
+					}
+					table.appendChild (row);
+				}
+				document.getElementById ("rowsrange").innerHTML = ((state.tabledata.length === 0) ? "0-" : (startingrow + 1) + "-");
+				document.getElementById ("rowsrange").innerHTML += (lastrow + 1) + " out of " +  state.tabledata.length;
+			}
+			function updatePage (index) {
+				// -2: previous page;
+				// -1: next page;
+				// 0,1,2,... : page 0,1,2,....
+
+				state.rowsperpage = parseInt(inputfield.rowsperpage.value);
+				var totalPages = ((state.rowsperpage === 0) ? 1 : Math.ceil(state.tabledata.length / state.rowsperpage));
+				if (totalPages === 0) totalPages = 1;
+
+				if (index === -2) {
+					if (state.currpage > 0) --state.currpage;
+					else return;
+				}
+				else if (index === -1) {
+					if (state.currpage < totalPages-1) ++state.currpage;
+					else return;
+				}
+				else if (index < -2) return;
+				else state.currpage = index;
+
+				if (state.currpage === 0)
+					document.getElementById("prev_page").setAttribute("disabled", "disabled");
+				else
+					document.getElementById("prev_page").removeAttribute("disabled");
+				if (state.currpage === totalPages-1)
+					document.getElementById("next_page").setAttribute("disabled", "disabled");
+				else
+					document.getElementById("next_page").removeAttribute("disabled");
+
+				var pageNumbers = document.getElementById ("page_number_row");
+				while (pageNumbers.firstChild)
+					pageNumbers.removeChild (pageNumbers.lastChild);	// clears all page number buttons
+
+				for (var i = 0; i < totalPages; ++i) {
+					var button = document.createElement ("button");
+					button.setAttribute("onclick", "updatePage(" + i + ")");
+					button.innerHTML = i+1;
+					if (state.currpage === i)
+						button.setAttribute ("disabled", "disabled");
+					pageNumbers.appendChild (button);
+				}
+				displayTableRows(state.currpage * state.rowsperpage, state.rowsperpage);
+			}
+			function parseTable() {
+				updateInputState();
+				var categoryOffset = 2 * state.category;
+
+				var data = scores[inputfield.year.value][inputfield.round.value];
+				data = sortData(data, state.sortby, categoryOffset+3);
 
 				var goodCount = 0, zeroCount = 0, totalCount = 0;
 
 				for (var i = 0; i < data.length; ++i) {
 					var s = data[i];
-					var scoreCellNumber = 0, row = document.createElement("tr");
-					addCell(row, i+1);
+					var scoreCellNumber = 0;
+					var row = [], classesData = [];
+					row.push(i+1);
 
 					for (var j = 0; j < s.length; ++j) {
-						if (j < 2)
-							addCell (row, s[j]);
-						else if (j === 2)
-							addCell (row, s[j], "default");
+						if (j <= 2)
+							row.push(s[j]);
 						else if (j > 2) {
 							if (scoreCellNumber === categoryOffset || scoreCellNumber === categoryOffset+1) {
 								if (s[j] === 0) {
-									addCell(row, s[j], "grey");
-									row.className += " grey";
-									if (scoreCellNumber === categoryOffset) ++zeroCount;
-									if (tableViewType >= 2) {
+									if (state.showcourses >= 2) {
 										row = null;
 										break;
 									}
+									if (scoreCellNumber === categoryOffset) {
+										classesData.unshift(" grey");
+										++zeroCount;
+									}
+									row.push(s[j]);
+									classesData.push(3);
 								}
-								else if (gate_score >= s[j]) {
-									addCell(row, s[j], "good");
-									row.className += " good";
-									if (scoreCellNumber === categoryOffset+1) ++goodCount;
-								}
-								else if (gate_score < s[j]) {
-									addCell(row, s[j], "bad");
+								else if (state.score >= s[j]) {
 									if (scoreCellNumber === categoryOffset+1) {
-										row.className += " bad";
-										if (tableViewType >= 1) {
+										classesData.unshift(" good");
+										++goodCount;
+									}
+									row.push(s[j]);
+									classesData.push(1);
+								}
+								else if (state.score < s[j]) {
+									if (scoreCellNumber === categoryOffset+1) {
+										classesData.unshift(" bad");
+										if (state.showcourses >= 1) {
 											row = null;
 											break;
 										}
 									}
+									row.push(s[j]);
+									classesData.push(2);
 								}
 							}
-							else addCell(row, s[j], "default");
+							else {
+								row.push(s[j]);
+								classesData.push(0);
+							}
 
 							++scoreCellNumber;
 						}
 						if (j === s.length - 1) {
 							++totalCount;
-							table.appendChild(row);
+							state.tabledata.push(row);
+							state.othertabledata.push(classesData);
 						}
 					}
 				}
+				updatePage(0);
+
 				document.getElementById("totalCount").innerHTML = i;
 				document.getElementById("goodCount").innerHTML = goodCount;
 				document.getElementById("badCount").innerHTML = i - goodCount - zeroCount;
 				document.getElementById("zeroCount").innerHTML = zeroCount;
 
-				document.getElementById("curr_year").innerHTML = ccmt_year.children[ccmt_year.selectedIndex].innerHTML;
-				document.getElementById("curr_round").innerHTML = ccmt_round.children[ccmt_round.selectedIndex].innerHTML;
-				document.getElementById("curr_score").innerHTML = gate_score;
-				document.getElementById("curr_cat").innerHTML = category.children[category.selectedIndex].innerHTML;
-				document.getElementById("curr_view").innerHTML = tableView.children[tableView.selectedIndex].innerHTML;
-				document.getElementById("curr_sort").innerHTML = sortBy.children[sortBy.selectedIndex].innerHTML;
-				document.getElementById("curr_order").innerHTML = (document.getElementById ("order_asc").checked) ? "Ascending" : "Descending";
+				document.getElementById("curr_year").innerHTML = inputfield.year.children[inputfield.year.selectedIndex].innerHTML;
+				document.getElementById("curr_round").innerHTML = inputfield.round.children[inputfield.round.selectedIndex].innerHTML;
+				document.getElementById("curr_score").innerHTML = state.score;
+				document.getElementById("curr_cat").innerHTML = inputfield.category.children[inputfield.category.selectedIndex].innerHTML;
+				document.getElementById("curr_view").innerHTML = inputfield.showcourses.children[inputfield.showcourses.selectedIndex].innerHTML;
+				document.getElementById("curr_sort").innerHTML = inputfield.sortby.children[inputfield.sortby.selectedIndex].innerHTML;
+				document.getElementById("curr_order").innerHTML = (inputfield.orderasc.checked ? "Ascending" : "Descending");
 			}
-			document.body.onload = function() {		// Group by institute name, sort by program name for every list
+			function scrollToTop() {
+				inputfield.rowsperpage.scrollIntoView();
+			}
+			function loadInitTable() {		// Group by institute name, sort by program name for every list
 				for (var year in scores) {
 					for (var round in scores[year]) {
 						sortData(scores[year][round], 2);
@@ -393,3 +538,4 @@
 		</script>
 	</body>
 </html>
+		
