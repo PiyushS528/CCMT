@@ -27,7 +27,7 @@
 				font-family: autoradiographic, sans-serif;
 			}
 			html, body {
-				background: #cfdfef;
+				background: #cfe2ef;
 			}
 			fieldset {
 				border: 1px dashed #000000;
@@ -91,6 +91,11 @@
 				border: 1px solid black;
 				border-width: 0 1px 1px 0;
 				padding: 5px;
+			}
+			#cutoff_table th {
+				font-weight: normal;
+				background: #4f677f;
+				color: #ffffff;
 			}
 			.default{
 				background: #ffffff !important;
@@ -313,7 +318,6 @@
 				var tr, th;
 
 				var tr = document.createElement ("tr");
-				tr.className += " grey";
 
 				th = addHeader(tr, "Sr. No."); th.setAttribute("rowspan", 2);
 				th = addHeader(tr, "Institute Name"); th.setAttribute("rowspan", 2);
@@ -332,7 +336,6 @@
 				table.appendChild(tr);
 
 				var tr = document.createElement ("tr");
-				tr.className += " grey";
 
 				for (var i = 0; i < 10; ++i) {
 					addHeader(tr, "MAX");
