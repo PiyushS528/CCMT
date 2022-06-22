@@ -1,0 +1,138 @@
+@font-face {
+	font-family: autoradiographic;
+	src: url("./autoradiographic/autoradiographic rg.ttf");
+}
+@font-face {
+	font-family: autoradiographic;
+	font-style: italic;
+	src: url("./autoradiographic/autoradiographic rg it.ttf");
+}
+html, body, input, button, select {
+	font-family: autoradiographic, sans-serif;
+}
+html, body {
+	background: #cfe2ef;
+}
+fieldset {
+	border: 1px dashed #000000;
+	min-width: 32em;
+}
+select, input[type="number"] {
+	height: 2em;
+	margin: 0.2em 0 0 0;
+}
+select {
+	cursor: pointer;
+}
+.curr {
+	border: 3px double #6f6f6f;
+	border-width: 3px 0;
+	color: #6f6f6f;
+	font-size: 0.7em;
+	margin-left: 0.5em;
+	padding: 0 0.5em;
+}
+label {
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	border-radius: 5em;
+	border-width: 0 0 1px 1px;
+	cursor: pointer;
+	line-height: 2em;
+	padding: 0.2em 1em;
+}
+button.button1 {
+	background: #efefef;
+	border: 1px solid #000000;
+	border-radius: 5px;
+	color: #000000;
+	cursor: pointer;
+	padding: 0.5em 1em;
+}
+button.button1[disabled], button.button1[disabled]:hover, button.button1[disabled]:active {
+	background: #cfcfcf;
+	color: #7f7f7f;
+	border-color: #7f7f7f;
+}
+button#update {
+	padding: 0.5em 2em !important;
+}
+button.pagenav {
+	padding: 0.7em 1.4em;
+}
+button:hover {
+	background: #cfeff7;
+}
+button:active {
+	background: #2fcfff;
+}
+button.page_number {
+	background: none !important;
+	border-width: 0 !important;
+	color: #0000cf !important;
+	cursor: pointer;
+	margin-bottom: 0.4em;
+}
+button.page_number:hover {
+	text-decoration: underline;
+}
+button.page_number[disabled], button.page_number[disabled]:hover, button.page_number[disabled]:active {
+	background: #cfcfcf !important;
+	color: #7f7f7f !important;
+	text-decoration: none !important;
+}
+
+#cutoff_table {
+	border: 1px solid black;
+	font-size: 0.9em;
+	min-width: 95%;
+}
+#cutoff_table td, #cutoff_table th {
+	border: 1px solid black;
+	border-width: 0 1px 1px 0;
+	padding: 5px;
+}
+#cutoff_table th {
+	font-weight: normal;
+	background: #4f677f;
+	color: #ffffff;
+}
+.default{
+	background: #ffffff !important;
+}
+.grey{
+	background: url("./null-hatch.png") #cfcfcf !important;
+}
+.good{
+	background: #cfffcf !important;
+}
+.bad{
+	background: #efafaf !important;
+}
+.default td, .default th{
+	background: #ffffff;
+}
+.grey td, .grey th {
+	background: url("./null-hatch.png") #cfcfcf;
+}
+.good td, .good th{
+	background: #cfffcf;
+}
+.bad td, .bad th{
+	background: #efafaf;
+}
+
+#totalCount {
+	font-weight: bold;
+}
+#goodCount {
+	font-weight: bold;
+	color: #3faf3f;
+}
+#badCount {
+	font-weight: bold;
+	color: #af3f3f;
+}
+#zeroCount {
+	font-weight: bold;
+	color: #6f6f6f;
+}
