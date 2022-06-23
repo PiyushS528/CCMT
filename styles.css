@@ -39,6 +39,7 @@ label {
 	cursor: pointer;
 	line-height: 2em;
 	padding: 0.2em 1em;
+	white-space: nowrap;
 }
 button.button1 {
 	background: #efefef;
@@ -84,7 +85,6 @@ button.page_number[disabled], button.page_number[disabled]:hover, button.page_nu
 #cutoff_table {
 	border: 1px solid black;
 	font-size: 0.9em;
-	min-width: 95%;
 }
 #cutoff_table td, #cutoff_table th {
 	border: 1px solid black;

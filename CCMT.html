@@ -59,17 +59,17 @@
 				<option value="8">ST</option>
 				<option value="9">ST-PwD</option>
 			</select>
-			<span id="curr_cat" class="curr"></span> <br>
+			<span id="curr_cat" class="curr"></span> <br><br>
 
-			Show:
+			Show Courses:
 			<select id="table_view">
-				<option value="0" selected>All Courses</option>
-				<option value="2">Accepting Courses</option>
+				<option value="0" selected>Show All Courses</option>
+				<option value="2">Accepting Courses Only</option>
 				<option value="1">Accepting Courses (include zero seats)</option>
 			</select>
 			<span id="curr_view" class="curr"></span> <br><br>
 
-			Sort by:
+			Sort By:
 			<select id="sort_by">
 				<option value="0" selected>Institute Name</option>
 				<option value="2">Program (Course) Name</option>
@@ -79,8 +79,8 @@
 			</select>
 			<span id="curr_sort" class="curr"></span> <br>
 
-			<label><input type="radio" name="sortOrder" id="order_asc" checked> Ascending</label> &nbsp;
-			<label><input type="radio" name="sortOrder" id="order_desc"> Descending</label>
+			<label><input type="radio" name="sortOrder" id="order_asc" checked /> Ascending </label> &nbsp;
+			<label><input type="radio" name="sortOrder" id="order_desc" /> Descending </label>
 			<span id="curr_order" class="curr"></span> <br><br>
 
 			<button id="update" class="button1" onclick="parseTable()">UPDATE</button>
@@ -93,7 +93,11 @@
 			Total Courses: <span id="totalCount"></span>
 		</div> <br>
 
-		(Note: MAX and MIN values indicate GATE scores) <br><br>
+		(Note: MAX and MIN values indicate GATE scores) <br>
+		<label>
+			<input type="checkbox" name="showSingleCategory" id="show_single_category" onchange="categoryViewChanged()" />
+			Don't show scores from other categories
+		</label><br><br>
 
 		Rows per page:
 		<select id="rowsperpage" onchange="updatePage(0)">

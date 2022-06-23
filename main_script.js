@@ -5,6 +5,7 @@ var inputfield = {
 	category: document.getElementById("category"),
 	showcourses: document.getElementById("table_view"),
 	sortby: document.getElementById("sort_by"),
+	showsinglecategory: document.getElementById("show_single_category"),
 	orderasc: document.getElementById("order_asc"),
 	rowsperpage: document.getElementById("rowsperpage")
 };
@@ -12,9 +13,11 @@ var state = {
 	year: 0,
 	round: "",
 	score: 0,
-	category: "",
+	category: 0,
 	showcourses: 0,
 	sortby: 0,
+
+	categorymask: 0,
 
 	rowsperpage: 0,
 	currpage: 0,
@@ -33,6 +36,10 @@ function updateInputState() {
 	state.sortby = parseInt(inputfield.sortby.value);
 	if (!inputfield.orderasc.checked) ++state.sortby;
 
+	if (inputfield.showsinglecategory.checked)
+		state.categorymask = Math.pow(2, state.category);
+	else state.categorymask = 1023;
+
 	state.rowsperpage = parseInt(inputfield.rowsperpage.value);
 	state.currpage = 0;
 
@@ -47,17 +54,6 @@ function highlightUpdateButton (disable) {
 		document.getElementById("update").style.outline = "0";
 	else
 		document.getElementById("update").style.outline = "3px solid #df5f5f";
-}
-function yearChanged() {		// Update 'round' selection box if 'year' selection is changed
-	inputfield.round.innerHTML = "";
-	for (var r in scores[inputfield.year.value]) {
-		var option = document.createElement("option");
-		option.setAttribute("value", r);
-		var text = document.createTextNode(r);
-		option.appendChild(text);
-		inputfield.round.appendChild(option);
-	}
-	highlightUpdateButton();
 }
 function addCell (tr, str, classList) {		// append <td class=(classList)>(str)</td> in tr table row
 	var td = document.createElement("td");
@@ -84,23 +80,27 @@ function addTableHeader (table) {
 	th = addHeader(tr, "Institute Name"); th.setAttribute("rowspan", 2);
 	th = addHeader(tr, "Program Name"); th.setAttribute("rowspan", 2);
 	th = addHeader(tr, "Group Id"); th.setAttribute("rowspan", 2);
-	th = addHeader(tr, "GEN"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "GEN-PwD"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "EWS"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "EWS-PwD"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "OBC-NCL"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "OBC-NCL-PwD"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "SC"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "SC-PwD"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "ST"); th.setAttribute("colspan", 2);
-	th = addHeader(tr, "ST-PwD"); th.setAttribute("colspan", 2);
+
+	
+	if (state.categorymask & 1) {th = addHeader(tr, "GEN"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 2) {th = addHeader(tr, "GEN-PwD"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 4) {th = addHeader(tr, "EWS"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 8) {th = addHeader(tr, "EWS-PwD"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 16) {th = addHeader(tr, "OBC-NCL"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 32) {th = addHeader(tr, "OBC-NCL-PwD"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 64) {th = addHeader(tr, "SC"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 128) {th = addHeader(tr, "SC-PwD"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 256) {th = addHeader(tr, "ST"); th.setAttribute("colspan", 2);}
+	if (state.categorymask & 512) {th = addHeader(tr, "ST-PwD"); th.setAttribute("colspan", 2);}
 	table.appendChild(tr);
 
 	var tr = document.createElement ("tr");
 
-	for (var i = 0; i < 10; ++i) {
-		addHeader(tr, "MAX");
-		addHeader(tr, "MIN");
+	for (var i = 1; i <= 512 ; i *= 2) {
+		if (state.categorymask & i) {
+			addHeader(tr, "MAX");
+			addHeader(tr, "MIN");
+		}
 	}
 	table.appendChild(tr);
 }
@@ -141,7 +141,7 @@ function sortData(data, sortType, scoreindex) {		// scoreindex = starting index 
 	}
 	return data;
 }
-function displayTableRows (startingrow, totalrows) {
+function displayTableRows (startingrow, totalrows) {		// Take data from state.tabledata & data.othertabledata and display the specified range of rows.
 	var table = document.getElementById ("cutoff_table");
 
 	while (table.firstChild)
@@ -155,20 +155,25 @@ function displayTableRows (startingrow, totalrows) {
 	for (var i = startingrow; i <= lastrow; ++i) {
 		var row = document.createElement("tr");
 		row.className += state.othertabledata[i][0];
-		addCell(row, state.tabledata[i][0]);
-		addCell(row, state.tabledata[i][1]);
-		addCell(row, state.tabledata[i][2]);
-		addCell(row, state.tabledata[i][3], "default");
+		addCell(row, state.tabledata[i][0]);		// Sr. No.
+		addCell(row, state.tabledata[i][1]);		// Institute Name
+		addCell(row, state.tabledata[i][2]);		// Program Name
+		addCell(row, state.tabledata[i][3], "default");		// Group ID
+
+		var categoryBit = 1;
 		for (var j = 4; j < state.tabledata[i].length; ++j) {
-			var colorcode = state.othertabledata[i][j-3];
-			var cellclass;
-			switch (colorcode) {
-				case 0: cellclass = "default"; break;
-				case 1: cellclass = "good"; break;
-				case 2: cellclass = "bad"; break;
-				case 3: cellclass = "grey"; break;
+			if (state.categorymask & categoryBit) {
+				var colorcode = state.othertabledata[i][j-3];
+				var cellclass;
+				switch (colorcode) {
+					case 0: cellclass = "default"; break;
+					case 1: cellclass = "good"; break;
+					case 2: cellclass = "bad"; break;
+					case 3: cellclass = "grey"; break;
+				}
+				addCell(row, state.tabledata[i][j], cellclass);
 			}
-			addCell(row, state.tabledata[i][j], cellclass);
+			if (j & 1) categoryBit *= 2;
 		}
 		table.appendChild (row);
 	}
@@ -179,43 +184,46 @@ function updatePage (index) {
 	// -2: previous page;
 	// -1: next page;
 	// 0,1,2,... : page 0,1,2,....
+	// NaN: Just refresh the page
 
-	state.rowsperpage = parseInt(inputfield.rowsperpage.value);
-	var totalPages = ((state.rowsperpage === 0) ? 1 : Math.ceil(state.tabledata.length / state.rowsperpage));
-	if (totalPages === 0) totalPages = 1;
+	if (!isNaN(index)) {
+		state.rowsperpage = parseInt(inputfield.rowsperpage.value);
+		var totalPages = ((state.rowsperpage === 0) ? 1 : Math.ceil(state.tabledata.length / state.rowsperpage));
+		if (totalPages === 0) totalPages = 1;
 
-	if (index === -2) {
-		if (state.currpage > 0) --state.currpage;
-		else return;
-	}
-	else if (index === -1) {
-		if (state.currpage < totalPages-1) ++state.currpage;
-		else return;
-	}
-	else if (index < -2) return;
-	else state.currpage = index;
+		if (index === -2) {
+			if (state.currpage > 0) --state.currpage;
+			else return;
+		}
+		else if (index === -1) {
+			if (state.currpage < totalPages-1) ++state.currpage;
+			else return;
+		}
+		else if (index < -2) return;
+		else state.currpage = index;
 
-	if (state.currpage === 0)
-		document.getElementById("prev_page").setAttribute("disabled", "disabled");
-	else
-		document.getElementById("prev_page").removeAttribute("disabled");
-	if (state.currpage === totalPages-1)
-		document.getElementById("next_page").setAttribute("disabled", "disabled");
-	else
-		document.getElementById("next_page").removeAttribute("disabled");
+		if (state.currpage === 0)
+			document.getElementById("prev_page").setAttribute("disabled", "disabled");
+		else
+			document.getElementById("prev_page").removeAttribute("disabled");
+		if (state.currpage === totalPages-1)
+			document.getElementById("next_page").setAttribute("disabled", "disabled");
+		else
+			document.getElementById("next_page").removeAttribute("disabled");
 
-	var pageNumbers = document.getElementById ("page_number_row");
-	while (pageNumbers.firstChild)
-		pageNumbers.removeChild (pageNumbers.lastChild);	// clears all page number buttons
+		var pageNumbers = document.getElementById ("page_number_row");
+		while (pageNumbers.firstChild)
+			pageNumbers.removeChild (pageNumbers.lastChild);	// clears all page number buttons
 
-	for (var i = 0; i < totalPages; ++i) {
-		var link = document.createElement ("button");
-		link.setAttribute("onclick", "updatePage(" + i + ")");
-		link.className = "page_number";
-		link.innerHTML = i+1;
-		if (state.currpage === i)
-			link.setAttribute ("disabled", "disabled");
-		pageNumbers.appendChild (link);
+		for (var i = 0; i < totalPages; ++i) {
+			var link = document.createElement ("button");
+			link.setAttribute("onclick", "updatePage(" + i + ")");
+			link.className = "page_number";
+			link.innerHTML = i+1;
+			if (state.currpage === i)
+				link.setAttribute ("disabled", "disabled");
+			pageNumbers.appendChild (link);
+		}
 	}
 	displayTableRows(state.currpage * state.rowsperpage, state.rowsperpage);
 }
@@ -300,6 +308,24 @@ function parseTable() {
 	document.getElementById("curr_view").innerHTML = inputfield.showcourses.children[inputfield.showcourses.selectedIndex].innerHTML;
 	document.getElementById("curr_sort").innerHTML = inputfield.sortby.children[inputfield.sortby.selectedIndex].innerHTML;
 	document.getElementById("curr_order").innerHTML = (inputfield.orderasc.checked ? "Ascending" : "Descending");
+}
+function yearChanged() {		// Update 'round' selection box if 'year' selection is changed
+	inputfield.round.innerHTML = "";
+	for (var r in scores[inputfield.year.value]) {
+		var option = document.createElement("option");
+		option.setAttribute("value", r);
+		var text = document.createTextNode(r);
+		option.appendChild(text);
+		inputfield.round.appendChild(option);
+	}
+	highlightUpdateButton();
+}
+function categoryViewChanged() {
+	if (inputfield.showsinglecategory.checked)
+		state.categorymask = Math.pow(2, state.category);
+	else state.categorymask = 1023;
+
+	updatePage();
 }
 function loadInitTable() {		// Group by institute name, sort by program name for every list
 	for (var year in scores) {
