@@ -13,9 +13,12 @@ html, body, input, button, select {
 html, body {
 	background: #cfe2ef;
 }
+
+/*	*	*	*	*	*	*	*	*	*/
+
 fieldset {
 	border: 1px dashed #000000;
-	min-width: 32em;
+	white-space: nowrap;
 }
 select, input[type="number"] {
 	height: 2em;
@@ -32,7 +35,7 @@ select {
 	margin-left: 0.5em;
 	padding: 0 0.5em;
 }
-label {
+label.checkbox_label {
 	border: 1px solid rgba(0, 0, 0, 0.5);
 	border-radius: 5em;
 	border-width: 0 0 1px 1px;
@@ -41,6 +44,12 @@ label {
 	margin-right: 0.5em;
 	padding: 0.2em 1em;
 	white-space: nowrap;
+}
+button:hover {
+	background: #cfeff7;
+}
+button:active {
+	background: #2fcfff;
 }
 button.button1 {
 	background: #efefef;
@@ -58,14 +67,12 @@ button.button1[disabled], button.button1[disabled]:hover, button.button1[disable
 button#update {
 	padding: 0.5em 2em !important;
 }
+
+/*	*	*	*	*	*	*	*	*	*/
+
 button.pagenav {
+	font-weight: bold;
 	padding: 0.7em 1.4em;
-}
-button:hover {
-	background: #cfeff7;
-}
-button:active {
-	background: #2fcfff;
 }
 button.page_number {
 	background: none !important;
@@ -82,6 +89,20 @@ button.page_number[disabled], button.page_number[disabled]:hover, button.page_nu
 	color: #7f7f7f !important;
 	text-decoration: none !important;
 }
+
+ul#page_number_row {
+	display: inline;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul#page_number_row li {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+/*	*	*	*	*	*	*	*	*	*/
 
 #cutoff_table {
 	border: 1px solid black;

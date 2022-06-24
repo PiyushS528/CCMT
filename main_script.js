@@ -48,6 +48,7 @@ function updateInputState() {
 }
 function scrollToTop() {
 	document.getElementById("course_counter").scrollIntoView();
+	document.getElementById("next_page").focus();
 }
 function highlightUpdateButton (disable) {
 	if (disable)
@@ -216,13 +217,19 @@ function updatePage (index) {
 			pageNumbers.removeChild (pageNumbers.lastChild);	// clears all page number buttons
 
 		for (var i = 0; i < totalPages; ++i) {
+			var li = document.createElement ("li");
 			var link = document.createElement ("button");
 			link.setAttribute("onclick", "updatePage(" + i + ")");
+			link.setAttribute("aria-label", "Go to page " + (i+1) + " of " + totalPages);
 			link.className = "page_number";
 			link.innerHTML = i+1;
-			if (state.currpage === i)
+			if (state.currpage === i) {
 				link.setAttribute ("disabled", "disabled");
-			pageNumbers.appendChild (link);
+				document.getElementById("prev_page").setAttribute("aria-label", "Previous page button, currently at " + (i+1) + " of " + totalPages);
+				document.getElementById("next_page").setAttribute("aria-label", "Next page button, currently at " + (i+1) + " of " + totalPages);
+			}
+			li.appendChild (link);
+			pageNumbers.appendChild (li);
 		}
 	}
 	displayTableRows(state.currpage * state.rowsperpage, state.rowsperpage);

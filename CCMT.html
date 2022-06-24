@@ -19,15 +19,17 @@
 	</head>
 
 	<body onload="loadInitTable()">
-		<h1> CCMT Cutoff Viewer Tool </h1>
+		<header>
+			<h1> CCMT Cutoff Viewer Tool </h1>
 
-		<em style="font-size: 0.8em">
-			Last Updated: 24-June-2022 <br>
-			(Source: <a href="https://ccmt.admissions.nic.in/or-cr/" target="_blank">https://ccmt.admissions.nic.in/or-cr/</a> (new tab) )
-		</em> <br><br>
+			<em style="font-size: 0.8em">
+				Last Updated: 24-June-2022 <br>
+				(Source: <a href="https://ccmt.admissions.nic.in/or-cr/" target="_blank" title="Source of cutoff data link">https://ccmt.admissions.nic.in/or-cr/</a> (new tab) )
+			</em>
+		</header> <br><br>
 
 		<fieldset id="fields" onchange="highlightUpdateButton()">
-			Year:
+			<label for="ccmt_year">Year:</label>
 			<select id="ccmt_year" onchange="yearChanged()">
 				<option value="year2022" selected>2022</option>
 				<option value="year2021">2021</option>
@@ -36,17 +38,17 @@
 			</select>
 			<span id="curr_year" class="curr"></span> <br>
 
-			Round:
+			<label for="ccmt_round">Round:</label>
 			<select id="ccmt_round">
 				<option value="Round 1" selected>Round 1</option>
 			</select>
 			<span id="curr_round" class="curr"></span> <br><br>
 
-			GATE Score:
+			<label for="gate_score">GATE Score:</label>
 			<input type="number" id="gate_score" value="0" />
 			<span id="curr_score" class="curr"></span> <br>
 
-			Category:
+			<label for="category">Category:</label>
 			<select id="category">
 				<option value="0" selected>GEN (Open)</option>
 				<option value="1">GEN-PwD (Open-PwD)</option>
@@ -61,7 +63,7 @@
 			</select>
 			<span id="curr_cat" class="curr"></span> <br>
 
-			Show Courses:
+			<label for="table_view">Show Courses:</label>
 			<select id="table_view">
 				<option value="0" selected>Show All Courses</option>
 				<option value="2">Accepting Courses Only</option>
@@ -69,7 +71,7 @@
 			</select>
 			<span id="curr_view" class="curr"></span> <br><br>
 
-			Sort By:
+			<label for="sort_by">Sort By:</label>
 			<select id="sort_by">
 				<option value="0" selected>Institute Name</option>
 				<option value="2">Program (Course) Name</option>
@@ -79,8 +81,8 @@
 			</select>
 			<span id="curr_sort" class="curr"></span> <br>
 
-			<label><input type="radio" name="sortOrder" id="order_asc" checked /> Ascending </label>
-			<label><input type="radio" name="sortOrder" id="order_desc" /> Descending </label>
+			<label class="checkbox_label"><input type="radio" name="sortOrder" id="order_asc" checked /> Ascending </label>
+			<label class="checkbox_label"><input type="radio" name="sortOrder" id="order_desc" /> Descending </label>
 			<span id="curr_order" class="curr"></span> <br><br>
 
 			<button id="update" class="button1" onclick="parseTable()">UPDATE</button>
@@ -94,12 +96,12 @@
 		</div> <br>
 
 		(Note: MAX and MIN values indicate GATE scores) <br>
-		<label>
+		<label class="checkbox_label">
 			<input type="checkbox" name="showSingleCategory" id="show_single_category" onchange="categoryViewChanged()" />
 			Don't show scores from other categories
 		</label><br><br>
 
-		Rows per page:
+		<label for="rowsperpage">Rows per page:</label>
 		<select id="rowsperpage" onchange="updatePage(0)">
 			<option value="0">ALL</option>
 			<option value="10">10</option>
@@ -112,16 +114,16 @@
 
 		<div id="page_buttons">
 			Pages:
-			<span id="page_number_row">
-				<button class="page_number" disabled>1</button>
-			</span> <br>
-			<button id="prev_page" class="button1 pagenav" onclick="updatePage(-2)" disabled><b>&lt;</b></button>
-			<button id="next_page" class="button1 pagenav" onclick="updatePage(-1)" disabled><b>&gt;</b></button>
+			<ul id="page_number_row">
+				<li><button class="page_number" disabled aria-label="Go to page 1 of 1, button">1</button></li>
+			</ul> <br>
+			<button id="prev_page" class="button1 pagenav" onclick="updatePage(-2)" disabled aria-label="Previous page button">&lt;</button>
+			<button id="next_page" class="button1 pagenav" onclick="updatePage(-1)" disabled aria-label="Next page button">&gt;</button>
 		</div> <br>
 
 		<table id="cutoff_table" cellspacing="0"></table> <br>
 
-		<button class="button1" onclick="scrollToTop()" style="padding: 3em">^ BACK TO TOP ^</button> <br><br>
+		<button class="button1" onclick="scrollToTop()" style="padding: 3em">SCROLL TO TOP</button> <br><br>
 
 		<script type="text/javascript" src="./main_script.js"></script>
 	</body>
