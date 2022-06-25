@@ -314,7 +314,7 @@ function parseTable() {
 	document.getElementById("curr_sort").innerHTML = inputfield.sortby.children[inputfield.sortby.selectedIndex].innerHTML;
 	document.getElementById("curr_order").innerHTML = (inputfield.orderasc.checked ? "Ascending" : "Descending");
 }
-function yearChanged() {		// Update 'round' selection box if 'year' selection is changed
+function updateRounds() {		// Update 'round' selection box if 'year' selection is changed
 	inputfield.round.innerHTML = "";
 	for (var r in scores[inputfield.year.value]) {
 		var option = document.createElement("option");
@@ -338,5 +338,7 @@ function loadInitTable() {		// Group by institute name, sort by program name for
 			sortData(scores[year][round], 0);
 		}
 	}
+
+	updateRounds();
 	parseTable();
 }

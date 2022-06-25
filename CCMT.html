@@ -23,14 +23,14 @@
 			<h1> CCMT Cutoff Viewer Tool </h1>
 
 			<em style="font-size: 0.8em">
-				Last Updated: 24-June-2022 <br>
+				Last Updated: 25-June-2022 <br>
 				(Source: <a href="https://ccmt.admissions.nic.in/or-cr/" target="_blank" title="Source of cutoff data link">https://ccmt.admissions.nic.in/or-cr/</a> (new tab) )
 			</em>
 		</header> <br><br>
 
 		<fieldset id="fields" onchange="highlightUpdateButton()">
 			<label for="ccmt_year">Year:</label>
-			<select id="ccmt_year" onchange="yearChanged()">
+			<select id="ccmt_year" onchange="updateRounds()">
 				<option value="year2022" selected>2022</option>
 				<option value="year2021">2021</option>
 				<option value="year2020">2020</option>
@@ -39,9 +39,7 @@
 			<span id="curr_year" class="curr"></span> <br>
 
 			<label for="ccmt_round">Round:</label>
-			<select id="ccmt_round">
-				<option value="Round 1" selected>Round 1</option>
-			</select>
+			<select id="ccmt_round"></select>
 			<span id="curr_round" class="curr"></span> <br><br>
 
 			<label for="gate_score">GATE Score:</label>
