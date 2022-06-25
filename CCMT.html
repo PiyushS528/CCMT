@@ -63,13 +63,10 @@
 			</select>
 			<span id="curr_cat" class="curr"></span> <br>
 
-			<label for="table_view">Show Courses:</label>
-			<select id="table_view">
-				<option value="0" selected>Show All Courses</option>
-				<option value="2">Accepting Courses Only</option>
-				<option value="1">Accepting Courses (include zero seats)</option>
-			</select>
-			<span id="curr_view" class="curr"></span> <br><br>
+			<label class="checkbox_label">
+				<input type="checkbox" name="showAcceptingCourses" id="show_accepting_courses" />
+				Show accepting courses only
+			</label> <br><br>
 
 			<label for="sort_by">Sort By:</label>
 			<select id="sort_by">

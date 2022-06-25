@@ -3,7 +3,7 @@ var inputfield = {
 	round: document.getElementById("ccmt_round"),
 	score: document.getElementById("gate_score"),
 	category: document.getElementById("category"),
-	showcourses: document.getElementById("table_view"),
+	showAcceptingCourses: document.getElementById("show_accepting_courses"),
 	sortby: document.getElementById("sort_by"),
 	showAllCategories: document.getElementById("show_all_categories"),
 	orderasc: document.getElementById("order_asc"),
@@ -14,7 +14,7 @@ var state = {
 	round: "",
 	score: 0,
 	category: 0,
-	showcourses: 0,
+	showAcceptingCourses: false,
 	sortby: 0,
 
 	categorymask: 0,
@@ -32,7 +32,7 @@ function updateInputState() {
 	if (!state.score) state.score = 0;
 
 	state.category = parseInt(inputfield.category.value);
-	state.showcourses = parseInt(inputfield.showcourses.value);
+	state.showAcceptingCourses = inputfield.showAcceptingCourses.checked;
 	state.sortby = parseInt(inputfield.sortby.value);
 	if (!inputfield.orderasc.checked) ++state.sortby;
 
@@ -259,7 +259,7 @@ function parseTable() {
 							classesData.unshift(" grey");
 							++zeroCount;
 						}
-						if (state.showcourses >= 2) {
+						if (state.showAcceptingCourses) {
 							row = null;
 							break;
 						}
@@ -277,7 +277,7 @@ function parseTable() {
 					else if (state.score < s[j]) {
 						if (scoreCellNumber === categoryOffset+1) {
 							classesData.unshift(" bad");
-							if (state.showcourses >= 1) {
+							if (state.showAcceptingCourses) {
 								row = null;
 								break;
 							}
@@ -311,7 +311,6 @@ function parseTable() {
 	document.getElementById("curr_round").innerHTML = inputfield.round.children[inputfield.round.selectedIndex].innerHTML;
 	document.getElementById("curr_score").innerHTML = state.score;
 	document.getElementById("curr_cat").innerHTML = inputfield.category.children[inputfield.category.selectedIndex].innerHTML;
-	document.getElementById("curr_view").innerHTML = inputfield.showcourses.children[inputfield.showcourses.selectedIndex].innerHTML;
 	document.getElementById("curr_sort").innerHTML = inputfield.sortby.children[inputfield.sortby.selectedIndex].innerHTML;
 	document.getElementById("curr_order").innerHTML = (inputfield.orderasc.checked ? "Ascending" : "Descending");
 }
