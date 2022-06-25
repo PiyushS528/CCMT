@@ -5,7 +5,7 @@ var inputfield = {
 	category: document.getElementById("category"),
 	showcourses: document.getElementById("table_view"),
 	sortby: document.getElementById("sort_by"),
-	showsinglecategory: document.getElementById("show_single_category"),
+	showAllCategories: document.getElementById("show_all_categories"),
 	orderasc: document.getElementById("order_asc"),
 	rowsperpage: document.getElementById("rowsperpage")
 };
@@ -36,9 +36,8 @@ function updateInputState() {
 	state.sortby = parseInt(inputfield.sortby.value);
 	if (!inputfield.orderasc.checked) ++state.sortby;
 
-	if (inputfield.showsinglecategory.checked)
-		state.categorymask = Math.pow(2, state.category);
-	else state.categorymask = 1023;
+	if (inputfield.showAllCategories.checked) state.categorymask = 1023;
+	else state.categorymask = Math.pow(2, state.category);
 
 	state.rowsperpage = parseInt(inputfield.rowsperpage.value);
 	state.currpage = 0;
@@ -328,9 +327,8 @@ function yearChanged() {		// Update 'round' selection box if 'year' selection is
 	highlightUpdateButton();
 }
 function categoryViewChanged() {
-	if (inputfield.showsinglecategory.checked)
-		state.categorymask = Math.pow(2, state.category);
-	else state.categorymask = 1023;
+	if (inputfield.showAllCategories.checked) state.categorymask = 1023;
+	else state.categorymask = Math.pow(2, state.category);
 
 	updatePage();
 }
