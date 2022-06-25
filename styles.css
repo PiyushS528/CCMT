@@ -45,12 +45,6 @@ label.checkbox_label {
 	padding: 0.2em 1em;
 	white-space: nowrap;
 }
-button:hover {
-	background: #cfeff7;
-}
-button:active {
-	background: #2fcfff;
-}
 button.button1 {
 	background: #efefef;
 	border: 1px solid #000000;
@@ -58,6 +52,12 @@ button.button1 {
 	color: #000000;
 	cursor: pointer;
 	padding: 0.5em 1em;
+}
+button.button1:hover {
+	background: #cfeff7;
+}
+button.button1:active {
+	background: #2fcfff;
 }
 button.button1[disabled], button.button1[disabled]:hover, button.button1[disabled]:active {
 	background: #cfcfcf;
@@ -69,6 +69,22 @@ button#update {
 }
 
 /*	*	*	*	*	*	*	*	*	*/
+
+#totalCount {
+	font-weight: bold;
+}
+#goodCount {
+	font-weight: bold;
+	color: #3faf3f;
+}
+#badCount {
+	font-weight: bold;
+	color: #af3f3f;
+}
+#zeroCount {
+	font-weight: bold;
+	color: #6f6f6f;
+}
 
 button.pagenav {
 	font-weight: bold;
@@ -141,20 +157,4 @@ ul#page_number_row li {
 }
 .bad td, .bad th{
 	background: #efafaf;
-}
-
-#totalCount {
-	font-weight: bold;
-}
-#goodCount {
-	font-weight: bold;
-	color: #3faf3f;
-}
-#badCount {
-	font-weight: bold;
-	color: #af3f3f;
-}
-#zeroCount {
-	font-weight: bold;
-	color: #6f6f6f;
 }
